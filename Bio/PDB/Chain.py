@@ -13,6 +13,51 @@ class Chain(Entity):
         self.level = "C"
         Entity.__init__(self, id)
 
+    # Sorting methods: empty chain IDs come last.
+    def __gt__(self, other):
+        if isinstance(other, Chain):
+            if self.id == ' ' and other.id != ' ':
+                return 0
+            elif self.id != ' ' and other.id == ' ':
+                return 1
+            else:
+                return self.id > other.id
+        else:
+            return NotImplemented
+
+    def __ge__(self, other):
+        if isinstance(other, Chain):
+            if self.id == ' ' and other.id != ' ':
+                return 0
+            elif self.id != ' ' and other.id == ' ':
+                return 1
+            else:
+                return self.id >= other.id
+        else:
+            return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, Chain):
+            if self.id == ' ' and other.id != ' ':
+                return 0
+            elif self.id != ' ' and other.id == ' ':
+                return 1
+            else:
+                return self.id < other.id
+        else:
+            return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, Chain):
+            if self.id == ' ' and other.id != ' ':
+                return 0
+            elif self.id != ' ' and other.id == ' ':
+                return 1
+            else:
+                return self.id <= other.id
+        else:
+            return NotImplemented
+
     # Private methods
 
     def _sort(self, r1, r2):

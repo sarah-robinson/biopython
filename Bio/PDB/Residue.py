@@ -35,6 +35,60 @@ class Residue(Entity):
         full_id = (resname, hetflag, resseq, icode)
         return "<Residue %s het=%s resseq=%s icode=%s>" % full_id
 
+    # Residue-specific sorting methods
+    # Sort first by HETATM flag, then by resseq, finally by insertion code
+    def __gt__(self, other):
+        if isinstance(other, Residue):
+            hetflag_s, resseq_s, icode_s = self.id
+            hetflag_o, resseq_o, icode_o = other.id
+            if hetflag_o != hetflag_s:
+                return hetflag_s > hetflag_o
+            elif resseq_o != resseq_s:
+                return resseq_s > resseq_o
+            else:
+                return icode_s > icode_o
+        else:
+            return NotImplemented
+
+    def __ge__(self, other):
+        if isinstance(other, Residue):
+            hetflag_s, resseq_s, icode_s = self.id
+            hetflag_o, resseq_o, icode_o = other.id
+            if hetflag_o != hetflag_s:
+                return hetflag_s >= hetflag_o
+            elif resseq_o != resseq_s:
+                return resseq_s >= resseq_o
+            else:
+                return icode_s >= icode_o
+        else:
+            return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, Residue):
+            hetflag_s, resseq_s, icode_s = self.id
+            hetflag_o, resseq_o, icode_o = other.id
+            if hetflag_o != hetflag_s:
+                return hetflag_s < hetflag_o
+            elif resseq_o != resseq_s:
+                return resseq_s < resseq_o
+            else:
+                return icode_s < icode_o
+        else:
+            return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, Residue):
+            hetflag_s, resseq_s, icode_s = self.id
+            hetflag_o, resseq_o, icode_o = other.id
+            if hetflag_o != hetflag_s:
+                return hetflag_s < hetflag_o
+            elif resseq_o != resseq_s:
+                return resseq_s < resseq_o
+            else:
+                return icode_s < icode_o
+        else:
+            return NotImplemented
+
     # Private methods
 
     def _sort(self, a1, a2):
@@ -81,7 +135,17 @@ class Residue(Entity):
         Entity.add(self, atom)
 
     def sort(self):
-        self.child_list.sort(self._sort)
+        """Sort child atoms.
+
+        Atoms N, CA, C, O always come first, thereafter alphabetically
+        by name, with any alternative location specifier for disordered
+        atoms (altloc) as a tie-breaker.
+        """
+        warnings.warn("The custom sort() method will be removed in the "
+                      "future in favour of rich comparison methods. Use the "
+                      "built-in sorted() function instead.",
+                      BiopythonDeprecationWarning)
+        self.child_list.sort()
 
     def flag_disordered(self):
         """Set the disordered flag."""

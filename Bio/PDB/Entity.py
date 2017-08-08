@@ -51,6 +51,48 @@ class Entity(object):
         for child in self.child_list:
             yield child
 
+    # Generic id-based comparison methods
+    # Works for Structures and Models (id is numeric)
+    def __eq__(self, other):
+        if isinstance(other, Entity):
+            return self.id == other.id
+        else:
+            return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, Entity):
+            return self.id != other.id
+        else:
+            return NotImplemented
+
+    def __gt__(self, other):
+        if isinstance(other, Entity):
+            return self.id > other.id
+        else:
+            return NotImplemented
+
+    def __ge__(self, other):
+        if isinstance(other, Entity):
+            return self.id >= other.id
+        else:
+            return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, Entity):
+            return self.id < other.id
+        else:
+            return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, Entity):
+            return self.id <= other.id
+        else:
+            return NotImplemented
+
+    # Hash method to allow uniqueness (set)
+    def __hash__(self):
+        return hash(self.id)
+
     # Private methods
 
     def _reset_full_id(self):
@@ -280,6 +322,20 @@ class DisorderedEntityWrapper(object):
     def __sub__(self, other):
         """Subtraction with another object."""
         return self.selected_child - other
+
+    # Sorting
+    # Directly compare the selected child
+    def __gt__(self, other):
+        return self.selected_child > other
+
+    def __ge__(self, other):
+        return self.selected_child >= other
+
+    def __lt__(self, other):
+        return self.selected_child < other
+
+    def __le__(self, other):
+        return self.selected_child <= other
 
     # Public methods
 
